@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+    <adapter
+        provides=".System.ISystemInfo"
+        for=".System.System"
+        factory=".System.SystemInfo"
+        />
+
+    <adapter
+        provides=".Process.IProcessInfo"
+        for=".Process.Process"
+        factory=".Process.ProcessInfo"
+        />
+
+    <adapter
+        provides=".Metric.IMetricInfo"
+        for=".Metric.Metric"
+        factory=".Metric.MetricInfo"
+        />
+
+    <!-- Browser -->
+    <browser:resourceDirectory
+        name="zentrospect"
+        directory="resources"
+        />
+    
+    <browser:viewlet
+        name="js-zentrospect"
+        paths="/++resource++zentrospect/js/zentrospect.js"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+    <browser:viewlet
+        name="js-zentrospect-device"
+        paths="/++resource++zentrospect/js/zentrospect-device.js"
+        weight="10"
+        for="Products.ZenModel.Device.Device"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+</configure>
+
