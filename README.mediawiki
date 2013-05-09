@@ -1,0 +1,98 @@
+This ZenPack provides support for monitoring Zenoss servers. Specifically at
+this point this means monitoring Zenoss servers that have the
+[https://github.com/cluther/zenoss-snmp-module zenoss-snmp-module] extension
+to Net-SNMP installed to expose internal process metrics via SNMP.
+
+== Gallery ==
+<gallery widths=250px heights=127px>
+Zentrospect_Metrics.png
+Zentrospect_Modeler_Plugin.png
+Zentrospect_Processes.png
+Zentrospect_Systems.png
+</gallery>
+
+== Features ==
+
+The features added by this ZenPack can be summarized as follows. They are
+detailed further below.
+
+* Discovery of Zenoss systems, processes and metrics thereof.
+* Monitoring of process metric values.
+* Monitoring of process metric freshness.
+
+=== Discovery ===
+
+The following entities will be automatically discovered from server devices
+that are running Zenoss, have the ''zenoss.snmp.ZenossSNMP'' modeler plugin
+assigned, and have the ''zenoss-snmp-module'' extension to Net-SNMP installed
+and configured properly.
+
+;Zenoss Systems
+: Attributes: Name
+: Collections: Zenoss Processes, Zenoss Metrics
+
+;Zenoss Processes
+: Attributes: Name, System
+: Collections: Zenoss Metrics
+
+;Zenoss Metrics
+: Attributes: Name, System, Process
+
+=== Monitoring ===
+
+The following metrics will be collected every 5 minutes by default.
+
+;Metrics
+: Metrics: zenProcessMetricValue, zenProcessMetricCyclesSinceUpdate
+
+''zenProcessMetricValue'' is the most recent value recorded for the metric. It
+will be NaN in cases where a value hasn't been recorded recently.
+
+''zenProcessMetricCyclesSinceUpdate'' is how many "cycle intervals" it has been
+since the value was successfully recorded. This measure is used because some
+metrics are updated on different cycle intervals. For example, if the
+localhost-zenperfsnmp-devices metric is updated every 300 seconds and was last
+updated 30 seconds ago, the zenProcessMetricCyclesSinceUpdate value will be
+0.1.
+
+By default a maximum threshold of 2 is set for
+zenProcessMetricCyclesSinceUpdate on all discovered metrics. This can be used
+to identify Zenoss processes that are not functioning properly.
+
+=== Service Impact ===
+
+When combined with the Zenoss Service Dynamics product, this ZenPack adds
+service impact capability for the entities it discovers. The following service
+impact relationships are automatically added. These will be included in any
+services that contain one or more of the explicitly mentioned entities.
+
+;Service Impact Relationships
+: A ''Device'' failure impacts all associated ''Zenoss Systems''.
+: A ''Zenoss System'' failure impacts all associated ''Zenoss Processes''.
+: A ''Zenoss Process'' failure impacts all associated ''Zenoss Metrics''.
+
+== Usage ==
+
+To make use of this ZenPack you must first install
+[https://github.com/cluther/zenoss-snmp-module zenoss-snmp-module] on your
+Zenoss server(s). It provides valuable information on any server running Zenoss
+processes. This includes masters, hubs and collectors.
+
+You must then assign the ''zenoss.snmp.ZenossSNMP'' modeler plugin that comes
+with this ZenPack to any devices that have ''zenoss-snmp-module'' installed.
+The devices must then be remodeled.
+
+== Installed Items ==
+
+Installing this ZenPack will add the following items to your Zenoss system.
+
+;Modeler Plugins
+: zenoss.snmp.ZenossSNMP
+
+;Monitor Templates
+: ZentrospectMetric (in /)
+
+;Component Types
+: Zenoss System (on any device)
+: Zenoss Process (on Zenoss System components)
+: Zenoss Metric (on Zenoss Process components)
