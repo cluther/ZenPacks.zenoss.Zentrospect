@@ -47,6 +47,7 @@ class ZenossSNMP(SnmpPlugin):
 
             systems.setdefault(system_id, {
                 'title': system_name,
+                'name': system_name,
                 'snmpindex': system_snmpindex,
                 'processes': {},
                 })
@@ -56,7 +57,8 @@ class ZenossSNMP(SnmpPlugin):
 
             processes = systems[system_id]['processes']
             processes.setdefault(process_id, {
-                'title': process_name,
+                'title': '-'.join([system_name, process_name]),
+                'name': process_name,
                 'snmpindex': process_snmpindex,
                 'metrics': {},
                 })
@@ -66,7 +68,8 @@ class ZenossSNMP(SnmpPlugin):
 
             metrics = systems[system_id]['processes'][process_id]['metrics']
             metrics.setdefault(metric_id, {
-                'title': metric_name,
+                'title': '-'.join([system_name, process_name, metric_name]),
+                'name': metric_name,
                 'snmpindex': metric_snmpindex,
                 })
 
@@ -80,6 +83,7 @@ class ZenossSNMP(SnmpPlugin):
                 'modname': MODULE_NAME['System'],
                 'id': system_id,
                 'title': system['title'],
+                'system_name': system['name'],
                 'snmpindex': system['snmpindex'],
                 }))
 
@@ -94,6 +98,7 @@ class ZenossSNMP(SnmpPlugin):
                     'modname': MODULE_NAME['Process'],
                     'id': process_id,
                     'title': process['title'],
+                    'process_name': process['name'],
                     'snmpindex': process['snmpindex'],
                     }))
 
@@ -108,6 +113,7 @@ class ZenossSNMP(SnmpPlugin):
                         'modname': MODULE_NAME['Metric'],
                         'id': metric_id,
                         'title': metric['title'],
+                        'metric_name': metric['name'],
                         'snmpindex': metric['snmpindex'],
                         }))
 

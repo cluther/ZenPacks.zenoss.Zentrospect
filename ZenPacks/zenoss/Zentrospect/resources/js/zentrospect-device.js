@@ -169,6 +169,7 @@ ZC.ZentrospectProcessPanel = Ext.extend(ZC.ZentrospectComponentGridPanel, {
                 {name: 'monitored'},
                 {name: 'locking'},
                 {name: 'system'},
+                {name: 'process_name'},
                 {name: 'metric_count'}
             ],
             columns: [{
@@ -178,16 +179,22 @@ ZC.ZentrospectProcessPanel = Ext.extend(ZC.ZentrospectComponentGridPanel, {
                 renderer: Zenoss.render.severity,
                 width: 50
             },{
-                id: 'system',
-                dataIndex: 'system',
-                header: _t('System'),
-                renderer: Zenoss.render.zentrospect_entityLinkFromGrid,
-                width: 120
-            },{
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
                 renderer: Zenoss.render.zentrospect_entityLinkFromGrid
+            },{
+                id: 'system',
+                dataIndex: 'system',
+                header: _t('System'),
+                renderer: Zenoss.render.zentrospect_entityLinkFromGrid,
+                sortable: false,
+                width: 120
+            },{
+                id: 'process_name',
+                dataIndex: 'process_name',
+                header: _t('Process'),
+                width: 120
             },{
                 id: 'metric_count',
                 dataIndex: 'metric_count',
@@ -232,6 +239,7 @@ ZC.ZentrospectMetricPanel = Ext.extend(ZC.ZentrospectComponentGridPanel, {
                 {name: 'locking'},
                 {name: 'system'},
                 {name: 'process'},
+                {name: 'metric_name'},
                 {name: 'value'},
                 {name: 'cycles_old'}
             ],
@@ -242,22 +250,29 @@ ZC.ZentrospectMetricPanel = Ext.extend(ZC.ZentrospectComponentGridPanel, {
                 renderer: Zenoss.render.severity,
                 width: 50
             },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                renderer: Zenoss.render.zentrospect_entityLinkFromGrid
+            },{
                 id: 'system',
                 dataIndex: 'system',
                 header: _t('System'),
                 renderer: Zenoss.render.zentrospect_entityLinkFromGrid,
+                sortable: false,
                 width: 120
             },{
                 id: 'process',
                 dataIndex: 'process',
                 header: _t('Process'),
                 renderer: Zenoss.render.zentrospect_entityLinkFromGrid,
+                sortable: false,
                 width: 120
             },{
-                id: 'name',
-                dataIndex: 'name',
-                header: _t('Name'),
-                renderer: Zenoss.render.zentrospect_entityLinkFromGrid
+                id: 'metric_name',
+                dataIndex: 'metric_name',
+                header: _t('Metric'),
+                width: 120
             },{
                 id: 'value',
                 dataIndex: 'value',

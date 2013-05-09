@@ -1,0 +1,13 @@
+// Model
+// http://yuml.me/0728e78c
+[note: ZenPacks.zenoss.Zentrospect Model ERD{bg:cornsilk}]
+[Device{bg:green}]<>1-0..*[System]
+[System]<>1-0..*[Process]
+[Process]<>1-0..*[Metric]
+
+// Impact
+// http://yuml.me/3789f2c4
+[note: ZenPacks.zenoss.Zentrospect Impact ERD{bg:cornsilk}]
+[Device{bg:green}]1-0..*>[System]
+[System]1-0..*>[Process]
+[Process]1-0..*>[Metric]

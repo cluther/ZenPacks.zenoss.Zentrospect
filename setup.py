@@ -3,7 +3,7 @@
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
 NAME = "ZenPacks.zenoss.Zentrospect"
-VERSION = "1.0.0"
+VERSION = "1.0.0dev1"
 AUTHOR = "Zenoss, Inc."
 LICENSE = "GPLv2+"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.zenoss']

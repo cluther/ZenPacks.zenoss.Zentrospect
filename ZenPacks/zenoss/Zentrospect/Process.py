@@ -13,6 +13,7 @@ from zope.interface import implements
 from Products.ZenRelations.RelSchema import ToOne, ToManyCont
 from Products.Zuul.decorators import info
 from Products.Zuul.form import schema
+from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
 from Products.Zuul.interfaces.component import IComponentInfo
 from Products.Zuul.utils import ZuulMessageFactory as _t
@@ -28,6 +29,12 @@ class Process(Component):
 
     meta_type = portal_type = 'ZentrospectProcess'
 
+    process_name = None
+
+    _properties = Component._properties + (
+        {'id': 'process_name', 'type': 'string', 'mode': 'w'},
+        )
+
     _relations = Component._relations + (
         ('system', ToOne(ToManyCont, MODULE_NAME['System'], 'processes')),
         ('metrics', ToManyCont(ToOne, MODULE_NAME['Metric'], 'process')),
@@ -39,6 +46,8 @@ class IProcessInfo(IComponentInfo):
     API Info interface for Process.
     '''
 
+    title = schema.TextLine(title=_t(u'Title'))
+    process_name = schema.TextLine(title=_t(u'Process Name'))
     system = schema.Entity(title=_t(u'System'))
     metric_count = schema.Int(title=_t(u'Number of Metrics'))
 
@@ -50,6 +59,9 @@ class ProcessInfo(ComponentInfo):
 
     implements(IProcessInfo)
     adapts(Process)
+
+    title = ProxyProperty('title')
+    process_name = ProxyProperty('process_name')
 
     @property
     @info

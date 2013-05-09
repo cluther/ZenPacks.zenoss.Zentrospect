@@ -48,5 +48,35 @@
         permission="zope2.Public"
         />
 
-</configure>
+    <!-- Impact -->
+    <configure zcml:condition="installed ZenPacks.zenoss.Impact">
+        <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
 
+        <!-- RelationshipDataProviders -->
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for="Products.ZenModel.Device.Device"
+            factory=".impact.DeviceRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".System.System"
+            factory=".impact.SystemRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".Process.Process"
+            factory=".impact.ProcessRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".Metric.Metric"
+            factory=".impact.MetricRelationsProvider"
+            />
+
+    </configure>
+
+</configure>

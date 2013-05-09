@@ -12,6 +12,7 @@ from zope.interface import implements
 
 from Products.ZenRelations.RelSchema import ToOne, ToManyCont
 from Products.Zuul.form import schema
+from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
 from Products.Zuul.interfaces.component import IComponentInfo
 from Products.Zuul.utils import ZuulMessageFactory as _t
@@ -27,6 +28,12 @@ class System(Component):
 
     meta_type = portal_type = 'ZentrospectSystem'
 
+    system_name = None
+
+    _properties = Component._properties + (
+        {'id': 'system_name', 'type': 'string', 'mode': 'w'},
+        )
+
     _relations = Component._relations + (
         ('z_device', ToOne(ToManyCont, 'Products.ZenModel.Device', 'z_systems')),
         ('processes', ToManyCont(ToOne, MODULE_NAME['Process'], 'system')),
@@ -38,6 +45,8 @@ class ISystemInfo(IComponentInfo):
     API Info interface for System.
     '''
 
+    title = schema.TextLine(title=_t(u'Title'))
+    system_name = schema.TextLine(title=_t(u'System Name'))
     process_count = schema.Int(title=_t(u'Number of Processes'))
     metric_count = schema.Int(title=_t(u'Number of Metrics'))
 
@@ -49,6 +58,9 @@ class SystemInfo(ComponentInfo):
 
     implements(ISystemInfo)
     adapts(System)
+
+    title = ProxyProperty('title')
+    system_name = ProxyProperty('system_name')
 
     @property
     def process_count(self):
