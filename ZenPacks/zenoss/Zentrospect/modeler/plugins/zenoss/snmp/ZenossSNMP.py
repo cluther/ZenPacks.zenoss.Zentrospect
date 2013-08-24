@@ -12,7 +12,11 @@ Models systems, processes and their metrics from a server running Zenoss
 and the zenoss-snmp-module extension to Net-SNMP.
 '''
 
+import logging
+LOG = logging.getLogger('zen.Zentrospect')
+
 import itertools
+import re
 
 from Products.DataCollector.plugins.CollectorPlugin import SnmpPlugin
 from Products.DataCollector.plugins.CollectorPlugin import GetTableMap
@@ -23,6 +27,10 @@ from ZenPacks.zenoss.Zentrospect import MODULE_NAME
 
 
 class ZenossSNMP(SnmpPlugin):
+    deviceProperties = SnmpPlugin.deviceProperties + (
+        'zZentrospectIgnoreMetrics',
+        )
+
     snmpGetTableMaps = (
         GetTableMap('zenProcessMetricTable', '1.3.6.1.4.1.14296.3.3.1', {
             '.1': 'zenProcessMetricName',
@@ -31,6 +39,8 @@ class ZenossSNMP(SnmpPlugin):
 
     def process(self, device, results, log):
         log.info("processing %s for device %s", self.name(), device.id)
+
+        ignore_names = getattr(device, 'zZentrospectIgnoreMetrics', None)
 
         metric_table = results[1].get('zenProcessMetricTable', {})
 
@@ -109,6 +119,10 @@ class ZenossSNMP(SnmpPlugin):
                 maps.append(metric_rm)
 
                 for metric_id, metric in process['metrics'].items():
+                    if ignore_names and re.search(ignore_names, metric['title']):
+                        LOG.info("ignoring Zenoss metric %s", metric['title'])
+                        continue
+
                     metric_rm.append(ObjectMap(data={
                         'modname': MODULE_NAME['Metric'],
                         'id': metric_id,
