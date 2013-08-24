@@ -1,11 +1,11 @@
-##############################################################################
+#######################################################################
 #
-# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+# Copyright (C) 2013, Chet Luther <chet.luther@gmail.com>
 #
-# This content is made available according to terms specified in
-# License.zenoss under the directory where your Zenoss product is installed.
+# Licensed under GNU General Public License 3.0 or later.
+# Some rights reserved. See COPYING, AUTHORS.
 #
-##############################################################################
+#######################################################################
 
 '''
 Models systems, processes and their metrics from a server running Zenoss
