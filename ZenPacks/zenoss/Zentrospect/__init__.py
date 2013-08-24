@@ -20,6 +20,7 @@ import Globals
 from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
+from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 from Products.ZenUtils.Utils import unused
 from Products.Zuul.interfaces import ICatalogTool
 
@@ -60,11 +61,17 @@ for relname, modname in NEW_DEVICE_RELATIONS:
             (relname, ToManyCont(ToOne, modname, 'z_device')),
             )
 
+setzPropertyCategory('zZentrospectIgnoreMetrics', 'Zentrospect')
+
 
 class ZenPack(ZenPackBase):
     '''
     ZenPack loader that handles custom installation and removal tasks.
     '''
+
+    packZProperties = [
+        ('zZentrospectIgnoreMetrics', 'zendisc', 'string'),
+        ]
 
     def install(self, app):
         super(ZenPack, self).install(app)

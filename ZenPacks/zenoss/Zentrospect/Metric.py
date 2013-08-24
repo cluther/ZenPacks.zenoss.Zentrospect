@@ -7,6 +7,8 @@
 #
 #######################################################################
 
+from itertools import chain, combinations
+
 from zope.component import adapts
 from zope.interface import implements
 
@@ -20,6 +22,7 @@ from Products.Zuul.utils import ZuulMessageFactory as _t
 
 from ZenPacks.zenoss.Zentrospect import MODULE_NAME
 from ZenPacks.zenoss.Zentrospect.Component import Component
+from ZenPacks.zenoss.Zentrospect.utils import sorted_powerset
 
 
 class Metric(Component):
@@ -38,6 +41,36 @@ class Metric(Component):
     _relations = Component._relations + (
         ('process', ToOne(ToManyCont, MODULE_NAME['Process'], 'metrics')),
         )
+
+    def getRRDTemplates(self):
+        '''
+        Return the monitoring templates to use for this metric.
+
+        Given the z-localhost-zendisc-devices metric this will attempt
+        to return the following precedence-order. The first name for
+        which a template exists will be used::
+
+            ZentrospectMetric-localhost-zendisc-devices
+            ZentrospectMetric-zendisc-devices
+            ZentrospectMetric-localhost-devices
+            ZentrospectMetric-localhost-zendisc
+            ZentrospectMetric-devices
+            ZentrospectMetric-zendisc
+            ZentrospectMetric-localhost
+        '''
+        basename = self.getRRDTemplateName()
+        process = self.process()
+        powerset = sorted_powerset((
+            process.system().system_name,
+            process.process_name,
+            self.metric_name))
+
+        for parts in powerset:
+            template = self.getRRDTemplateByName('-'.join((basename,) + parts))
+            if template:
+                return [template]
+
+        return []
 
 
 class IMetricInfo(IComponentInfo):
