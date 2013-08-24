@@ -3,9 +3,9 @@
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
 NAME = "ZenPacks.zenoss.Zentrospect"
-VERSION = "1.0.0dev1"
-AUTHOR = "Zenoss, Inc."
-LICENSE = "GPLv2+"
+VERSION = "1.0.0"
+AUTHOR = "Chet Luther <chet.luther@gmail.com>"
+LICENSE = "GPLv3"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.zenoss']
 PACKAGES = ['ZenPacks', 'ZenPacks.zenoss', 'ZenPacks.zenoss.Zentrospect']
 INSTALL_REQUIRES = []
