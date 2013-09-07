@@ -61,6 +61,8 @@ for relname, modname in NEW_DEVICE_RELATIONS:
             (relname, ToManyCont(ToOne, modname, 'z_device')),
             )
 
+setzPropertyCategory('zZentrospectIgnoreSystems', 'Zentrospect')
+setzPropertyCategory('zZentrospectIgnoreProcesses', 'Zentrospect')
 setzPropertyCategory('zZentrospectIgnoreMetrics', 'Zentrospect')
 
 
@@ -70,7 +72,9 @@ class ZenPack(ZenPackBase):
     '''
 
     packZProperties = [
-        ('zZentrospectIgnoreMetrics', 'zendisc', 'string'),
+        ('zZentrospectIgnoreSystems', '', 'string'),
+        ('zZentrospectIgnoreProcesses', 'zendisc', 'string'),
+        ('zZentrospectIgnoreMetrics', '', 'string'),
         ]
 
     def install(self, app):

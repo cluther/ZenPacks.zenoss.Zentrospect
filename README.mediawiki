@@ -61,9 +61,13 @@ You must then assign the ''zenoss.snmp.ZenossSNMP'' modeler plugin that comes wi
 
 === Configuring Metric Modeling ===
 
-Sometimes it is not desired to model every metric reported by ''zenoss-snmp-module''. One very common case is the metrics reported by the zendisc daemon. Ordinarily zendisc does not run frequently or as a daemon, so its metrics will always be stale and throw a warning event.
+Sometimes it is not desirable to model every system, process and metrics reported by ''zenoss-snmp-module''. One very common case is the zendisc process. Ordinarily zendisc does not run frequently or as a daemon, so its metrics will always be stale and result in a stale metric threshold warning events.
 
-To prevent certain metrics from being modeled you can use the <tt>zZentrospectIgnoreMetrics</tt> configuration property. Its value is evaluated as a regular expression for every metric that the modeler plugin discovers. By default it is set to <tt>zendisc</tt> so as to avoid modeling the zendisc processes mentioned above.
+To prevent the ''zendisc'' process and all of its metrics from being modeled, the default value of the <tt>zZentrospectIgnoreProcesses</tt> property is ''zendisc''.
+
+Entire systems can be ignored during modeling by setting <tt>zZentrospectIgnoreSystems</tt> to a regular expression that matches the name of systems you wish to ignore. This will also prevent modeling of any processes and metrics from that system.
+
+Individual metrics can be ignored with the <tt>zZentrospectIgnoreMetrics</tt> property.
 
 === Configuring Monitoring ===
 
@@ -88,15 +92,35 @@ As you can see, it goes from most specific to least specific. So if you want to 
 Installing this ZenPack will add the following items to your Zenoss system.
 
 ;Configuration Properties
-* zZentrospectIgnoreMetrics: Regex of metrics to ignore during modeling. Defaults to ''zendisc'' because zendisc is not a daemon and doesn't provide regular metrics.
+* zZentrospectIgnoreSystems: Regular expression of systems to ignore during modeling. All processes and metrics for matching systems will also be ignored. Defaults to an empty string which causes no systems to be ignored.
+* zZentrospectIgnoreProcesses: Regular expression of processes to ignore during modeling. All metrics for matching processes will also be ignored. Defaults to ''zendisc'' because zendisc is not a daemon and doesn't provide regular metrics.
+* zZentrospectIgnoreMetrics: Regular expression of metrics to ignore during modeling. Defaults to an empty string which causes no metrics to be ignored.
 
 ;Modeler Plugins
 * zenoss.snmp.ZenossSNMP
 
 ;Monitoring Templates
-* ZentrospectMetric (in /)
+* ZentrospectMetric (in /Devices)
 
 ;Component Types
 * Zenoss Systems (on any device)
 * Zenoss Processes (on Zenoss System components)
 * Zenoss Metrics (on Zenoss Process components)
+
+== Changes ==
+
+;1.2.0 (2013-09-06)
+* Added zZentrospectIgnoreSystems property for filtering modeled systems.
+* Added zZentrospectIgnoreProcesses property for filtering modeler processes.
+* Changed default value of zZentrospectIgnoreMetrics from ''zendisc'' to nothing.
+* Set default value of zZentrospectIgnoreProcesses to ''zendisc''.
+
+;1.1.0 (2013-08-23)
+* Added zZentrospectIgnoreMetrics property for filtering modeled metrics.
+* Added support for ZentrospectMetric-* monitoring templates for customizable monitoring per system, process or metric combination.
+
+;1.0.0 (2013-08-23)
+* Changed copyright.
+
+;1.0.0dev1 (2013-05-09)
+* Initial release.
