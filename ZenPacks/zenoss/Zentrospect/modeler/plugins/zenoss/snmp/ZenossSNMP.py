@@ -28,6 +28,8 @@ from ZenPacks.zenoss.Zentrospect import MODULE_NAME
 
 class ZenossSNMP(SnmpPlugin):
     deviceProperties = SnmpPlugin.deviceProperties + (
+        'zZentrospectIgnoreSystems',
+        'zZentrospectIgnoreProcesses',
         'zZentrospectIgnoreMetrics',
         )
 
@@ -40,7 +42,9 @@ class ZenossSNMP(SnmpPlugin):
     def process(self, device, results, log):
         log.info("processing %s for device %s", self.name(), device.id)
 
-        ignore_names = getattr(device, 'zZentrospectIgnoreMetrics', None)
+        ignore_systems = getattr(device, 'zZentrospectIgnoreSystems', None)
+        ignore_processes = getattr(device, 'zZentrospectIgnoreProcesses', None)
+        ignore_metrics = getattr(device, 'zZentrospectIgnoreMetrics', None)
 
         metric_table = results[1].get('zenProcessMetricTable', {})
 
@@ -89,6 +93,10 @@ class ZenossSNMP(SnmpPlugin):
         maps = [system_rm]
 
         for system_id, system in systems.items():
+            if ignore_systems and re.search(ignore_systems, system['title']):
+                LOG.info("ignoring Zenoss system %s", system['title'])
+                continue
+
             system_rm.append(ObjectMap(data={
                 'modname': MODULE_NAME['System'],
                 'id': system_id,
@@ -104,6 +112,10 @@ class ZenossSNMP(SnmpPlugin):
             maps.append(process_rm)
 
             for process_id, process in system['processes'].items():
+                if ignore_processes and re.search(ignore_processes, process['title']):
+                    LOG.info("ignoring Zenoss process %s", process['title'])
+                    continue
+
                 process_rm.append(ObjectMap(data={
                     'modname': MODULE_NAME['Process'],
                     'id': process_id,
@@ -119,7 +131,7 @@ class ZenossSNMP(SnmpPlugin):
                 maps.append(metric_rm)
 
                 for metric_id, metric in process['metrics'].items():
-                    if ignore_names and re.search(ignore_names, metric['title']):
+                    if ignore_metrics and re.search(ignore_metrics, metric['title']):
                         LOG.info("ignoring Zenoss metric %s", metric['title'])
                         continue
 
